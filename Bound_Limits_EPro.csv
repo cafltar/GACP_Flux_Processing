@@ -1,0 +1,7 @@
+Var,Val_L,Val_U
+LE_B,-200,1000
+H_B,-200,1000
+F_B,-60,60
+T_B,-10,10
+grade,1,
+outfile,C:\\Users\\russe\Desktop\GACP_Test_,

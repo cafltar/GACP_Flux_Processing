@@ -1,0 +1,12 @@
+ReddyProc,Start_AF,Driver
+Year,-99,-99
+DoY,-99,-99
+Hour,-99,-99
+NEE,FC,co2_flux_Filtered
+LE,LE,LE_flux_Filtered
+H,H,H_flux_Filtered
+Rg,SW_IN,Rg_Filtered
+Tair,TA,Tair_Filtered
+rH,RH,RH_Filtered
+VPD,VPD,VPD_Filtered
+Ustar,USTAR,u_star
