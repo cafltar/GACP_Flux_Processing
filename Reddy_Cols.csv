@@ -5,7 +5,7 @@ Hour,-99,-99
 NEE,FC,co2_flux_Filtered
 LE,LE,LE_flux_Filtered
 H,H,H_flux_Filtered
-Rg,SW_IN,Rg_Filtered
+Rg,SW_IN,SW_In_Filtered
 Tair,TA,Tair_Filtered
 rH,RH,RH_Filtered
 VPD,VPD,VPD_Filtered
