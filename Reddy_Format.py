@@ -10,7 +10,7 @@ import numpy as np
 from datetime import datetime
 # Can turn this into a function via sending the post gap-filled data 
 def REddy_Format(CE, FileName, col_str):
-    cols = pd.read_csv('C:\\*Flux_Processing_Code\\Reddy_Cols.csv',header=0)
+    cols = pd.read_csv('C:\\Users\\russe\\Documents\\GitHub\\GACP_Flux_Processing\\Reddy_Cols.csv',header=0)
     z = pd.DataFrame(CE.index)
     z = z[0].astype(str)
     adate,Y,H,M = [],[],[],[]
@@ -38,7 +38,7 @@ def REddy_Format(CE, FileName, col_str):
     Outa = Outa.join(AF_Out).astype(float)
     for k in range (3,len(cols)):
         Outa = Outa.rename(columns={cols[col_str][k]:cols['ReddyProc'][k]})
-        qq = np.isnan(Outa[cols['ReddyProc'][k]].astype(float))
-        Outa[cols['ReddyProc'][k]] =Outa[cols['ReddyProc'][k]].replace(Outa[cols['ReddyProc'][k]][qq],-9999)
-        del qq
-    Outa.to_csv(FileName, sep = '\t', index=False)
+        # qq = np.isnan(Outa[cols['ReddyProc'][k]].astype(float))
+        # Outa[cols['ReddyProc'][k]] =Outa[cols['ReddyProc'][k]].replace(Outa[cols['ReddyProc'][k]][qq],-9999)
+        # del qq
+    Outa.to_csv(FileName, sep = '\t', index=False, na_rep = -9999)
