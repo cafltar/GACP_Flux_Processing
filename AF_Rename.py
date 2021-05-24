@@ -69,5 +69,6 @@ def AmeriFlux_Rename(data, outfile, Format, AF, Output, GRADE=False):
     outfile = outfile+str(AF_Out['TIMESTAMP_START'][0])+'_'+str(AF_Out['TIMESTAMP_END'][-1])+'.csv'
     if Output == 'CSV':
         AF_Out_QC.to_csv(outfile, index = False, na_rep = -9999) # Output and fill missing data with -9999 as int
+        return AF_Out_QC
     else:
         return AF_Out_QC
