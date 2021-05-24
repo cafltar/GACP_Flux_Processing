@@ -77,7 +77,24 @@ def Grade_cs(df,info):
         precip = True
         data['P_Flag'] = 0
         data['P_Flag'][~Precip] = 1
-    else: precip = False     
+    else: precip = False
+    if 'anemometer_diagnostic_mean' in df.columns:
+        Sonic_D = df['anemometer_diagnostic_mean']>0
+        if cls[3] in df.columns:
+            df[cls[3]][Sonic_D] = np.NaN
+        if cls[2] in df.columns:
+            df[cls[2]][Sonic_D] = np.NaN
+        if cls[1] in df.columns:
+            df[cls[1]][Sonic_D] = np.NaN
+        if cls[0] in df.columns:
+            df[cls[0]][Sonic_D] = np.NaN
+            
+    if 'diag_75_mean' in df.columns:
+        IRGA_D = df['diag_75_mean']>0
+        if cls[2] in df.columns:
+            df[cls[2]][IRGA_D] = np.NaN
+        if cls[1] in df.columns:
+            df[cls[1]][IRGA_D] = np.NaN
     if precip:
         Good = Precip
     if Good is not None:
@@ -259,6 +276,58 @@ def Met_QAQC(**kwargs):
     else:
         print('**** Net Radiations not present ****')
     
+    if 'SW_In' in kwargs.keys():
+        Rn = pd.DataFrame(kwargs['SW_In'])    
+        if Q is None:
+            Q = Rn; Q = pd.DataFrame(Q)
+        else: Q= Q.join(Rn)
+        Q['SW_In_Hard_Limit'] = (Q[Rn.columns[0]].astype(float) >= -150) & (Q[Rn.columns[0]].astype(float) <= 1500)       
+        Q['SW_In_Change'] = (np.abs(Q[Rn.columns[0]].astype(float).diff() <= 500)) & (np.abs(Q[Rn.columns[0]].diff() != 0)) #& (~np.isnan(Q[Rn.columns[0]].astype(float).diff()))   
+        Q['SW_In_Day_Change'] = (Rn.resample('D').mean().diff !=0) 
+        Q['SW_In_Filtered'] = Q[Rn.columns[0]][Q['SW_In_Hard_Limit']&Q['SW_In_Change']&Q['SW_In_Day_Change']]
+        Q.drop(columns=[Rn.columns[0]],inplace=True)
+    else:
+        print('**** Net Radiations not present ****')
+        
+    if 'SW_Out' in kwargs.keys():
+        Rn = pd.DataFrame(kwargs['SW_Out'])    
+        if Q is None:
+            Q = Rn; Q = pd.DataFrame(Q)
+        else: Q= Q.join(Rn)
+        Q['SW_Out_Hard_Limit'] = (Q[Rn.columns[0]].astype(float) >= -150) & (Q[Rn.columns[0]].astype(float) <= 1500)       
+        Q['SW_Out_Change'] = (np.abs(Q[Rn.columns[0]].astype(float).diff() <= 500)) & (np.abs(Q[Rn.columns[0]].diff() != 0)) #& (~np.isnan(Q[Rn.columns[0]].astype(float).diff()))   
+        Q['SW_Out_Day_Change'] = (Rn.resample('D').mean().diff !=0) 
+        Q['SW_Out_Filtered'] = Q[Rn.columns[0]][Q['SW_Out_Hard_Limit']&Q['SW_Out_Change']&Q['SW_Out_Day_Change']]
+        Q.drop(columns=[Rn.columns[0]],inplace=True)
+    else:
+        print('**** Net Radiations not present ****')
+        
+    if 'LW_Out' in kwargs.keys():
+        Rn = pd.DataFrame(kwargs['LW_Out'])    
+        if Q is None:
+            Q = Rn; Q = pd.DataFrame(Q)
+        else: Q= Q.join(Rn)
+        Q['LW_Out_Hard_Limit'] = (Q[Rn.columns[0]].astype(float) >= -150) & (Q[Rn.columns[0]].astype(float) <= 1500)       
+        Q['LW_Out_Change'] = (np.abs(Q[Rn.columns[0]].astype(float).diff() <= 500)) & (np.abs(Q[Rn.columns[0]].diff() != 0)) #& (~np.isnan(Q[Rn.columns[0]].astype(float).diff()))   
+        Q['LW_Out_Day_Change'] = (Rn.resample('D').mean().diff !=0) 
+        Q['LW_Out_Filtered'] = Q[Rn.columns[0]][Q['LW_Out_Hard_Limit']&Q['LW_Out_Change']&Q['LW_Out_Day_Change']]
+        Q.drop(columns=[Rn.columns[0]],inplace=True)
+    else:
+        print('**** Net Radiations not present ****')
+        
+    if 'LW_In' in kwargs.keys():
+        Rn = pd.DataFrame(kwargs['LW_In'])    
+        if Q is None:
+            Q = Rn; Q = pd.DataFrame(Q)
+        else: Q= Q.join(Rn)
+        Q['LW_In_Hard_Limit'] = (Q[Rn.columns[0]].astype(float) >= -150) & (Q[Rn.columns[0]].astype(float) <= 1500)       
+        Q['LW_In_Change'] = (np.abs(Q[Rn.columns[0]].astype(float).diff() <= 500)) & (np.abs(Q[Rn.columns[0]].diff() != 0)) #& (~np.isnan(Q[Rn.columns[0]].astype(float).diff()))   
+        Q['LW_In_Day_Change'] = (Rn.resample('D').mean().diff !=0) 
+        Q['LW_In_Filtered'] = Q[Rn.columns[0]][Q['LW_In_Hard_Limit']&Q['LW_In_Change']&Q['LW_In_Day_Change']]
+        Q.drop(columns=[Rn.columns[0]],inplace=True)
+    else:
+        print('**** Longwave-In Radiations not present ****')
+    
     if 'Precip' in kwargs.keys(): # Lot of filters because of the difference of precip is there is or is not RH and check for frozen precip with temperature as the tipping bucket is bad with snow
         Precip = pd.DataFrame(kwargs['Precip'])
         if Q is None:
@@ -321,3 +390,4 @@ def Met_QAQC(**kwargs):
         Q['e_s_Filtered'] = Q[e_s.columns[0]][Q['e_s_Hard_Limit']&Q['e_s_Change']&Q['e_s_Day_Change']]        
         Q.drop(columns=[e_s.columns[0]],inplace=True)
     return Q
+
